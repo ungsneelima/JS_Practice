@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Search</title>
+    <script>
+        var emp1 = {
+            empId: "TMF1011",
+            firstName: "Antony",
+            lastName: "David",
+            designation: "Manager",
+            empAge: "42",
+            phno: "7698790",
+            email: "lee@gmail.com"
+        };
+        var emp2 = {
+            empId: "TMF1012",
+            firstName: "Martin",
+            lastName: "Luther",
+            designation: "Lead",
+            empAge: "35",
+            phno: "673547879",
+            email: "martin@gmail.com"
+        };
+        var emp3 = {
+            empId: "TMF1021",
+            firstName: "Harika",
+            lastName: "Y",
+            designation: "Developer",
+            empAge: "24",
+            phno: "9879076",
+            email: "harry@gmail.com"
+        };
+        var emp4 = {
+            empId: "ABC2012",
+            firstName: "Krithika",
+            lastName: "T",
+            designation: "Lead",
+            empAge: "32",
+            phno: "5476677879",
+            email: "krithika@gmail.com"
+        };
+        var emp5 = {
+            empId: "ABC2022",
+            firstName: "Aarna",
+            lastName: "D",
+            designation: "Associate Engineer",
+            empAge: "25",
+            phno: "987654333",
+            email: "aarna@gmail.com"
+        };
+        var emp6 = {
+            empId: "CAD1013",
+            firstName: "Sri",
+            lastName: "Harsha",
+            designation: "Lead",
+            empAge: "38",
+            phno: "876543987",
+            email: "sri@gmail.com"
+        };
+        var empList = [emp1, emp2, emp3, emp4, emp5, emp6];
+
+        function renderTable(data) {
+            var tableDiv = document.getElementById("empListTable");
+            tableDiv.innerHTML = "";
+
+            if (data.length === 0) {
+                tableDiv.innerHTML = "<p style='color: red; font-weight: bold;'>No results found.</p>";
+                return;
+            }
+
+            var empTable = document.createElement("table");
+            empTable.setAttribute("border", "1");
+            empTable.setAttribute("cellpadding", "8");
+
+            var headerRow = document.createElement("tr");
+            var headers = ["Emp ID", "First Name", "Last Name", "Designation", "Age", "Phone", "Email"];
+            headers.forEach(h => {
+                var th = document.createElement("th");
+                th.innerText = h;
+                headerRow.appendChild(th);
+            });
+            empTable.appendChild(headerRow);
+
+            data.forEach(emp => {
+                var tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${emp.empId}</td>
+                    <td>${emp.firstName}</td>
+                    <td>${emp.lastName}</td>
+                    <td>${emp.designation}</td>
+                    <td>${emp.empAge}</td>
+                    <td>${emp.phno}</td>
+                    <td>${emp.email}</td>
+                `;
+                empTable.appendChild(tr);
+            });
+
+            tableDiv.appendChild(empTable);
+        }
+
+        function doSearch() {
+            var empId = document.getElementById("empId").value.trim().toLowerCase();
+            var empDesig = document.getElementById("empDesig").value.trim().toLowerCase();
+            var empAge = document.getElementById("empAge").value.trim();
+            var firstName = document.getElementById("empFirstName").value.trim().toLowerCase();
+            var lastName = document.getElementById("empLastName").value.trim().toLowerCase();
+            var phone = document.getElementById("empPhNo").value.trim();
+            var email = document.getElementById("empEmail").value.trim().toLowerCase();
+
+            var filteredList = empList.filter(emp => {
+                return (
+                    (empId === "" || emp.empId.toLowerCase().includes(empId)) &&
+                    (empDesig === "" || emp.designation.toLowerCase().includes(empDesig)) &&
+                    (empAge === "" || parseInt(emp.empAge) > parseInt(empAge)) &&
+                    (firstName === "" || emp.firstName.toLowerCase().includes(firstName)) &&
+                    (lastName === "" || emp.lastName.toLowerCase().includes(lastName)) &&
+                    (phone === "" || emp.phno.includes(phone)) &&
+                    (email === "" || emp.email.toLowerCase().includes(email))
+                );
+            });
+
+            renderTable(filteredList);
+        }
+
+        window.onload = function () {
+            renderTable(empList); // Show all initially
+        };
+    </script>
+</head>
+
+<body>
+    <h2>Search for an Employee:</h2>
+    <table>
+        <tr>
+            <td><label>Emp ID:</label></td>
+            <td><input type="text" id="empId" /></td>
+            <td><label>Designation:</label></td>
+            <td><input type="text" id="empDesig" /></td>
+            <td><label>Age:</label></td>
+            <td><input type="text" id="empAge" /></td>
+        </tr>
+        <tr>
+            <td><label>First Name:</label></td>
+            <td><input type="text" id="empFirstName" /></td>
+            <td><label>Last Name:</label></td>
+            <td><input type="text" id="empLastName" /></td>
+        </tr>
+        <tr>
+            <td><label>Phone:</label></td>
+            <td><input type="text" id="empPhNo" /></td>
+            <td><label>Email:</label></td>
+            <td><input type="text" id="empEmail" /></td>
+            <td colspan="2"><button onclick="doSearch()">Search</button></td>
+        </tr>
+    </table>
+
+    <br />
+    <div id="empListTable"></div>
+</body>
+</html>
