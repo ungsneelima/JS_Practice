@@ -1,0 +1,11 @@
+empId,firstName,lastName,designation,empAge,phno,email
+TMF1011,Bala,Krishna,Manager,42,7698790,bala@gmail.com
+TMF1012,Neelima,Undurthi,Lead,37,673547879,neelima@gmail.com
+TMF1013,Akshaya,Patel,Lead,45,9898989898,akshaya@tmf.com
+TMF1014,Preethi,Rao,Developer,28,9876543210,preethi@tmf.com
+TMF1015,Siri,Varma,Tester,26,9876512345,siri@tmf.com
+TMF1016,Sai,Kumar,Manager,40,9012345678,sai@tmf.com
+TMF1017,Anjani,Sharma,Lead,35,9090909090,anjani@tmf.com
+TMF1018,Aparna,Devi,Developer,30,8888888888,aparna@tmf.com
+TMF1019,Arha,Reddy,Tester,25,7777777777,arha@tmf.com
+TMF1020,Aarna,Nair,Developer,29,6666666666,aarna@tmf.com

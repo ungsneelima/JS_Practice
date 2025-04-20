@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Search</title>
+    <style>
+        #empListTable {
+            margin-top: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Search for an Employee:</h2>
+<table>
+    <tr>
+        <td>EmpID:</td><td><input type="text" id="empId" /></td>
+        <td>Age:</td><td><input type="text" id="empAge" /></td>
+        <td>First Name:</td><td><input type="text" id="firstName" /></td>
+        <td>Last Name:</td><td><input type="text" id="lastName" /></td>
+    </tr>
+    <tr>
+        <td>Designation:</td><td><input type="text" id="designation" /></td>
+        <td>Phone:</td><td><input type="text" id="phno" /></td>
+        <td>Email:</td><td><input type="text" id="email" /></td>
+        <td colspan="2"><button onclick="doSearch()">Search</button></td>
+    </tr>
+</table>
+
+<div id="empListTable" style="display:none;"></div>
+
+<script>
+    var empList = [];
+
+    // Load CSV on page load
+    window.onload = function () {
+        fetch("employeeData.csv")
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(data) {
+                empList = csvToJson(data);
+            });
+    };
+
+    // function csvToJson(csv) {
+    //     var lines = csv.trim().split("\n");
+    //     var headers = lines[0].split(",");
+    //     var result = [];
+
+    //     for (var i = 1; i < lines.length; i++) {
+    //         var obj = {};
+    //         var currentline = lines[i].split(",");
+
+    //         for (var j = 0; j < headers.length; j++) {
+    //             obj[headers[j]] = currentline[j];
+    //         }
+
+    //         result.push(obj);
+    //     }
+
+    //     return result;
+    // }
+
+    // function doSearch() {
+    //     var filters = {
+    //         empId: document.getElementById("empId").value.trim().toLowerCase(),
+    //         empAge: document.getElementById("empAge").value.trim(),
+    //         firstName: document.getElementById("firstName").value.trim().toLowerCase(),
+    //         lastName: document.getElementById("lastName").value.trim().toLowerCase(),
+    //         designation: document.getElementById("designation").value.trim().toLowerCase(),
+    //         phno: document.getElementById("phno").value.trim(),
+    //         email: document.getElementById("email").value.trim().toLowerCase()
+    //     };
+
+    //     var results = empList.filter(function(emp) {
+    //         return (!filters.empId || emp.empId.toLowerCase().includes(filters.empId)) &&
+    //                (!filters.empAge || parseInt(emp.empAge) > parseInt(filters.empAge)) &&
+    //                (!filters.firstName || emp.firstName.toLowerCase().includes(filters.firstName)) &&
+    //                (!filters.lastName || emp.lastName.toLowerCase().includes(filters.lastName)) &&
+    //                (!filters.designation || emp.designation.toLowerCase().includes(filters.designation)) &&
+    //                (!filters.phno || emp.phno.includes(filters.phno)) &&
+    //                (!filters.email || emp.email.toLowerCase().includes(filters.email));
+    //     });
+
+    //     displayTable(results);
+    // }
+
+    function csvToJson(csv) {
+    var lines = csv.trim().split("\n");
+    var headers = lines[0].split(",").map(function(header) {
+        return header.trim(); // Trim spaces around headers
+    });
+    var result = [];
+
+    for (var i = 1; i < lines.length; i++) {
+        var obj = {};
+        var currentline = lines[i].split(",");
+
+        for (var j = 0; j < headers.length; j++) {
+            obj[headers[j]] = currentline[j].trim(); // Trim spaces around values
+        }
+
+        result.push(obj);
+    }
+
+    return result;
+}
+
+window.onload = function () {
+    fetch("employeeData.csv")
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(data) {
+            empList = csvToJson(data);
+            console.log(empList);  // Check the parsed data in the console
+        });
+};
+
+function doSearch() {
+    var empId = document.getElementById("empId").value.trim();
+    var empAge = document.getElementById("empAge").value.trim();
+    var firstName = document.getElementById("firstName").value.trim();
+    var lastName = document.getElementById("lastName").value.trim();
+    var designation = document.getElementById("designation").value.trim();
+    var phno = document.getElementById("phno").value.trim();
+    var email = document.getElementById("email").value.trim();
+
+    // Validation
+    if (empId && isNaN(empId)) {
+        alert("Please enter a valid numeric Employee ID.");
+        return;
+    }
+    if (empAge && isNaN(empAge)) {
+        alert("Please enter a valid numeric Age.");
+        return;
+    }
+    if (firstName && !isNaN(firstName)) {
+        alert("Please enter a valid string for First Name.");
+        return;
+    }
+    if (lastName && !isNaN(lastName)) {
+        alert("Please enter a valid string for Last Name.");
+        return;
+    }
+    if (designation && !isNaN(designation)) {
+        alert("Please enter a valid string for Designation.");
+        return;
+    }
+    if (phno && isNaN(phno)) {
+        alert("Please enter a valid numeric Phone number.");
+        return;
+    }
+    if (email && !email.includes("@")) {
+        alert("Please enter a valid Email.");
+        return;
+    }
+
+    var filters = {
+        empId: empId.toLowerCase(),
+        empAge: empAge,
+        firstName: firstName.toLowerCase(),
+        lastName: lastName.toLowerCase(),
+        designation: designation.toLowerCase(),
+        phno: phno,
+        email: email.toLowerCase()
+    };
+
+    var results = empList.filter(function(emp) {
+        return (!filters.empId || emp.empId.toLowerCase().includes(filters.empId)) &&
+               (!filters.empAge || parseInt(emp.empAge) > parseInt(filters.empAge)) &&
+               (!filters.firstName || emp.firstName.toLowerCase().includes(filters.firstName)) &&
+               (!filters.lastName || emp.lastName.toLowerCase().includes(filters.lastName)) &&
+               (!filters.designation || emp.designation.toLowerCase().includes(filters.designation)) &&
+               (!filters.phno || emp.phno.includes(filters.phno)) &&
+               (!filters.email || emp.email.toLowerCase().includes(filters.email));
+    });
+
+    displayTable(results);
+}
+
+
+    function displayTable(data) {
+        var tableDiv = document.getElementById("empListTable");
+        tableDiv.style.display = "block";
+        tableDiv.innerHTML = "";
+
+        var table = document.createElement("table");
+        var headers = ["Employee ID", "First Name", "Last Name", "Designation", "Age", "Contact No", "Email"];
+
+        var headerRow = document.createElement("tr");
+        for (var i = 0; i < headers.length; i++) {
+            var th = document.createElement("th");
+            th.innerText = headers[i];
+            headerRow.appendChild(th);
+        }
+        table.appendChild(headerRow);
+
+        if (data.length === 0) {
+            var row = document.createElement("tr");
+            var td = document.createElement("td");
+            td.colSpan = headers.length;
+            td.innerText = "No results found";
+            td.style.textAlign = "center";
+            row.appendChild(td);
+            table.appendChild(row);
+        } else {
+            for (var i = 0; i < data.length; i++) {
+                var emp = data[i];
+                var row = document.createElement("tr");
+                row.innerHTML =
+                    "<td>" + emp.empId + "</td>" +
+                    "<td>" + emp.firstName + "</td>" +
+                    "<td>" + emp.lastName + "</td>" +
+                    "<td>" + emp.designation + "</td>" +
+                    "<td>" + emp.empAge + "</td>" +
+                    "<td>" + emp.phno + "</td>" +
+                    "<td>" + emp.email + "</td>";
+                table.appendChild(row);
+            }
+        }
+
+        tableDiv.appendChild(table);
+    }
+</script>
+
+</body>
+</html>
